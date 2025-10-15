@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+    <h2>{{ titulo }}</h2>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                {% set style = "background-color: #d4edda; color: #155724; border: 1px solid green;" if category == 'success' else "background-color: #f8d7da; color: #721c24; border: 1px solid red;" %}
+                <div style="padding: 10px; margin-bottom: 15px; border-radius: 5px; {{ style }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <div style="display: flex; gap: 30px;">
+        
+        <div style="flex: 1; min-width: 300px; background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+            <h3>Cadastrar Novo Corretor/Admin</h3>
+            <form method="POST" action="{{ url_for('gerenciar_usuarios') }}">
+                
+                <label for="username">Usuário:</label>
+                <input type="text" id="username" name="username" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="email">E-mail:</label>
+                <input type="email" id="email" name="email" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="senha">Senha:</label>
+                <input type="password" id="senha" name="senha" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="funcao">Função:</label>
+                <select id="funcao" name="funcao" required style="width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ccc;">
+                    <option value="Corretor">Corretor</option>
+                    <option value="Admin">Admin</option>
+                </select><br>
+
+                <button type="submit" style="width: 100%; padding: 10px; background-color: #007bff; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                    Criar Usuário
+                </button>
+            </form>
+        </div>
+
+        <div style="flex: 2;">
+            <h3>Lista de Usuários (Total: {{ usuarios|length }})</h3>
+            <table style="width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+                <thead>
+                    <tr style="background-color: #f8f9fa;">
+                        <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">ID</th>
+                        <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Usuário</th>
+                        <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">E-mail</th>
+                        <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Função</th>
+                        <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in usuarios %}
+                    <tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ user.id }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ user.username }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">{{ user.email }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center; color: {% if user.funcao == 'Admin' %}#dc3545{% else %}#28a745{% endif %}; font-weight: bold;">{{ user.funcao }}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                            {% if user.id == current_user.id %}
+                                <span style="color: gray;">(Você)</span>
+                            {% else %}
+                                <a href="#" style="color: #6c757d; text-decoration: none;">(Ações)</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+{% endblock %}

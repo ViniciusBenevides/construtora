@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+    <h2>{% if imovel %}Editar Imóvel {{ imovel.codigo }}{% else %}Cadastrar Novo Imóvel{% endif %}</h2>
+    
+    <form method="POST" action="{% if imovel %}{{ url_for('editar_imovel', codigo=imovel.codigo) }}{% else %}{{ url_for('cadastrar_imovel') }}{% endif %}" 
+        enctype="multipart/form-data" 
+        style="background-color: white; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+
+        <div style="display: flex; flex-wrap: wrap; gap: 20px;">
+            
+            <div style="flex: 1 1 45%;">
+                <h3>Informações Básicas</h3>
+                
+                <label for="codigo">Código:</label>
+                <input type="text" id="codigo" name="codigo" required 
+                       value="{{ imovel.codigo if imovel else '' }}" 
+                       {% if imovel %}readonly style="background-color: #eee;"{% endif %} 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+                
+                <label for="cidade">Cidade:</label>
+                <input type="text" id="cidade" name="cidade" required 
+                       value="{{ imovel.cidade if imovel else '' }}" 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+                       
+                <label for="bairro">Bairro:</label>
+                <input type="text" id="bairro" name="bairro" required 
+                       value="{{ imovel.bairro if imovel else '' }}" 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="valor">Valor (R$):</label>
+                <input type="number" step="0.01" id="valor" name="valor" required 
+                       value="{{ imovel.valor if imovel else '' }}" 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <h3 style="margin-top: 20px;">Foto Principal</h3>
+                <label for="foto">Selecione o Arquivo (JPG, PNG):</label>
+                <input type="file" id="foto" name="foto" accept="image/*" style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+                
+                {% if imovel and imovel.foto_principal != 'default.jpg' %}
+                    <p>Foto atual:</p>
+                    <img src="{{ url_for('static', filename='fotos_imoveis/' + imovel.foto_principal) }}" 
+                         alt="Foto Atual" style="width: 100px; height: auto; border-radius: 5px; margin-bottom: 10px;">
+                {% endif %}
+            </div>
+            
+            <div style="flex: 1 1 45%;">
+                <h3>Detalhes do Imóvel</h3>
+                <label for="tipo_imovel">Tipo de Imóvel:</label>
+                <select id="tipo_imovel" name="tipo_imovel" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;">
+                    {% set current_tipo = imovel.tipo_imovel if imovel else '' %}
+                    <option value="Apartamento" {% if current_tipo == 'Apartamento' %}selected{% endif %}>Apartamento</option>
+                    <option value="Casa" {% if current_tipo == 'Casa' %}selected{% endif %}>Casa</option>
+                    <option value="Casa de condomínio" {% if current_tipo == 'Casa de condomínio' %}selected{% endif %}>Casa de condomínio</option>
+                    <option value="Lote Comercial" {% if current_tipo == 'Lote Comercial' %}selected{% endif %}>Lote Comercial</option>
+                    <option value="Loja/Salão" {% if current_tipo == 'Loja/Salão' %}selected{% endif %}>Loja/Salão</option>
+                </select><br>
+
+                <label for="quartos">Quartos:</label>
+                <input type="number" id="quartos" name="quartos" min="0" required 
+                       value="{{ imovel.quartos if imovel else 1 }}" 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="vagas">Vagas:</label>
+                <input type="number" id="vagas" name="vagas" min="0" required 
+                       value="{{ imovel.vagas if imovel else 1 }}" 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="banheiros">Banheiros:</label>
+                <input type="number" id="banheiros" name="banheiros" min="0" required 
+                       value="{{ imovel.banheiros if imovel else 1 }}" 
+                       style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="area_m2">Área (m²):</label>
+                <input type="number" step="0.1" id="area_m2" name="area_m2" value="0" min="0" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;"><br>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status" required style="width: 100%; padding: 8px; margin-bottom: 10px; border: 1px solid #ccc;">
+                    {% set current_status = imovel.status if imovel else '' %}
+                    <option value="Pronto" {% if current_status == 'Pronto' %}selected{% endif %}>Pronto</option>
+                    <option value="Lançamento" {% if current_status == 'Lançamento' %}selected{% endif %}>Lançamento</option>
+                    <option value="Para Alugar" {% if current_status == 'Para Alugar' %}selected{% endif %}>Para Alugar</option>
+                </select><br>
+
+            </div>
+        </div>
+
+        <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer; margin-top: 20px;">
+            {% if imovel %}Salvar Alterações{% else %}Cadastrar Imóvel{% endif %}
+        </button>
+    </form>
+{% endblock %}

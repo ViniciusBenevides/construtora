@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+    <h2>Bem-vindo, {{ current_user.username }}!</h2>
+    <p>Você está logado como **{{ current_user.funcao }}**. Aqui está o resumo dos seus imóveis.</p>
+    
+    <div style="display: flex; gap: 20px; margin-bottom: 30px;">
+        <div style="padding: 15px; border: 1px solid #ddd; border-left: 5px solid #007bff; background-color: white; flex: 1;">
+            <p style="margin: 0; font-size: 1.2em;">Total de Imóveis:</p>
+            <h3 style="margin: 5px 0 0;">{{ total_imoveis }}</h3>
+        </div>
+        <div style="padding: 15px; border: 1px solid #ddd; border-left: 5px solid #28a745; background-color: white; flex: 1;">
+            <p style="margin: 0; font-size: 1.2em;">Imóveis Prontos:</p>
+            <h3 style="margin: 5px 0 0;">{{ prontos }}</h3>
+        </div>
+        <div style="padding: 15px; border: 1px solid #ddd; border-left: 5px solid #ffc107; background-color: white; flex: 1;">
+            <p style="margin: 0; font-size: 1.2em;">Para Alugar:</p>
+            <h3 style="margin: 5px 0 0;">{{ alugar }}</h3>
+        </div>
+    </div>
+    
+    <h3>Seus Imóveis Cadastrados</h3>
+    
+    {% if meus_imoveis %}
+    <table style="width: 100%; border-collapse: collapse; background-color: white; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+        <thead>
+            <tr style="background-color: #f8f9fa;">
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Código</th>
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Cidade / Bairro</th>
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Tipo</th>
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: right;">Valor (R$)</th>
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Status</th>
+                <th style="padding: 10px; border: 1px solid #ddd; text-align: center;">Ações</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for imovel in meus_imoveis %}
+            <tr>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ imovel.codigo }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ imovel.cidade }} - {{ imovel.bairro }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd;">{{ imovel.tipo_imovel }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: right;">{{ "%.2f"|format(imovel.valor) }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">{{ imovel.status }}</td>
+                <td style="padding: 10px; border: 1px solid #ddd; text-align: center;">
+                    <a href="{{ url_for('editar_imovel', codigo=imovel.codigo) }}" style="color: #007bff; text-decoration: none;">Editar</a>
+                    </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+        <p>Você ainda não cadastrou nenhum imóvel. <a href="{{ url_for('cadastrar_imovel') }}">Comece agora!</a></p>
+    {% endif %}
+
+{% endblock %}

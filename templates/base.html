@@ -1,0 +1,218 @@
+{# templates\base.html #}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <base href="/">
+    <title>Imóveis em Goiânia | URBS Portal</title>
+    
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content={% block description %}{% endblock %}>
+
+    <style>
+        /* Reset básico */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+
+        /* Estilo do Header */
+        header {
+            background-color: #007bff; /* Azul vibrante */
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.8em;
+        }
+
+        /* Estilo da Navegação (Navbar) */
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 25px;
+            position: relative;
+        }
+
+        nav ul li a, .btn-acessar {
+            color: white;
+            text-decoration: none;
+            padding: 8px 10px;
+            display: block;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover, .btn-acessar:hover {
+            background-color: #0056b3; /* Azul mais escuro no hover */
+            border-radius: 5px;
+        }
+
+        /* Estilo do Dropdown (menu suspenso) */
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            top: 100%; /* Aparece abaixo do item principal */
+            left: 0;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block; /* Mostra o dropdown quando o mouse está sobre o item */
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #ddd;
+        }
+
+        /* Estilo do Modal (Janela de Login) */
+        .modal {
+            display: none; /* Escondido por padrão */
+            position: fixed; 
+            z-index: 10; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            overflow: auto; 
+            background-color: rgba(0,0,0,0.4); /* Fundo preto semi-transparente */
+            padding-top: 60px;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 5% auto; /* 5% do topo e centralizado */
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%; /* Pode ser ajustado */
+            max-width: 400px;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        /* Estilo principal onde o conteúdo de cada página entra */
+        .content {
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Sua Imobiliária</h1>
+        <nav>
+            <ul>
+                <li class="dropdown">
+                    <a href="#">Nossos Imóveis</a>
+                    <div class="dropdown-content">
+                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='alugar') }}">Para Alugar</a>
+                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='lancamentos') }}">Lançamentos</a>
+                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='prontos') }}">Prontos</a>
+                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='portfolio') }}">Portfólio (Todos)</a>
+                    </div>
+                </li>
+
+                {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
+                <li><a href="{{ url_for('cadastrar_imovel') }}">Cadastrar Imóvel</a></li>
+                {% endif %}
+
+                {% if current_user.is_authenticated and current_user.funcao == 'Admin' %}
+                <li><a href="{{ url_for('gerenciar_usuarios') }}" style="color: #ffeb3b; font-weight: bold;">PAINEL ADMIN</a></li>
+                {% endif %}
+                
+                {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
+                <li><a href="{{ url_for('cadastrar_imovel') }}">Cadastrar Imóvel</a></li>
+                {% endif %}
+
+                <li><a href="/sobre">Sobre Nós</a></li>
+                <li><a href="/contato">Contato</a></li>
+
+                {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('dashboard') }}" style="font-weight: bold;">Olá, {{ current_user.username }} ({{ current_user.funcao }})</a></li>
+                <li><a href="{{ url_for('logout') }}" style="background-color: #dc3545; border-radius: 5px;">Sair</a></li>
+                {% else %}
+                <li><a href="{{ url_for('login') }}" class="btn-acessar">Acessar</a></li>
+                {% endif %}
+            </ul>
+        </nav>
+    </header>
+
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+    
+    <div id="modalAcesso" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Acesso</h2>
+        <p>Login para Administradores e Corretores</p>
+        <form>
+            <input type="text" placeholder="E-mail ou Usuário" style="width: 90%; padding: 10px; margin: 5px 0;">
+            <input type="password" placeholder="Senha" style="width: 90%; padding: 10px; margin: 5px 0;">
+            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Entrar</button>
+        </form>
+      </div>
+    </div>
+
+    <script>
+        // Pega os elementos do DOM (Document Object Model)
+        var modal = document.getElementById("modalAcesso");
+        var btn = document.getElementById("btnAcessar");
+        var span = document.getElementsByClassName("close")[0];
+
+        // Quando o usuário clica no botão, abre o modal 
+        btn.onclick = function() {
+            modal.style.display = "block";
+        }
+
+        // Quando o usuário clica no (x), fecha o modal
+        span.onclick = function() {
+            modal.style.display = "none";
+        }
+
+        // Quando o usuário clica fora do modal, fecha-o
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
+</body>
+</html>
