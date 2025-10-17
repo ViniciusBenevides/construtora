@@ -257,8 +257,10 @@ def listar_imoveis_por_status(status_filtro):
         imoveis = []
         titulo_pagina = "Categoria Não Encontrada"
 
-    # 3. Renderiza a mesma página inicial, mas com os imóveis filtrados
-    return render_template("index.html", imoveis=imoveis, titulo=titulo_pagina)
+    # 3. Renderiza a nova página de listagem, mas com os imóveis filtrados
+    return render_template(
+        "listagem_imoveis.html", imoveis=imoveis, titulo=titulo_pagina
+    )
 
 
 # --- ROTA DE BUSCA E FILTRO AVANÇADO ---

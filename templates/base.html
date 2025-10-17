@@ -11,19 +11,13 @@
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
     <link href="{{ url_for('static', filename='css/sweetAlert.css') }}" rel="stylesheet">
     <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 
     <script src="{{ url_for('static', filename='js/sweetAlert.js') }}"></script>
     <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
-    <title>Imóveis em Goiânia | URBS Portal</title>
     
     <title>{% block title %}{% endblock %}</title>
     <meta name="description" content="{% block description %}{% endblock %}">
-
-    <style>
-        body{
-            background-color: black !important;
-        }
-    </style>
     
     <style>
         .page {
@@ -196,14 +190,7 @@
                             <li class="mb-5"><img src="{{ url_for('static', filename='images/logo-branca-morada-do-sol.png') }}"
                                     alt="Logo da Imobili&#xE1;ria" class="img-fluid b-logo"
                                     style="max-height:130px; -webkit-max-width: 150px;max-width: 150px; object-fit: contain;"
-                                    /></li>
-                            <li>
-                                <div class="abreModal">
-                                    <div class="footer-widget footer-link">
-                                        <h4 class="text-white">ACESSAR</h4>
-                                    </div>
-                                </div>
-                            </li>
+                            /></li>
                             {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
                                 <li>
                                     <div class="footer-widget footer-link"><a
@@ -221,6 +208,24 @@
                                         </a>
                                     </div>
                                 </li>
+                            {% endif %}
+                            {% if current_user.is_authenticated %}
+                                <li>
+                                    <div class="footer-widget footer-link"><a
+                                            href="{{ url_for('dashboard') }}">
+                                            <h4 class="text-white">Olá, {{ current_user.username }}</h4>
+                                        </a>
+                                    </div>
+                                </li>
+                                <li>
+                                    <div class="footer-widget footer-link"><a
+                                            href="{{ url_for('logout') }}">
+                                            <h4 class="text-white">Sair</h4>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% else %}
+                                <li><a href="#" class="nav-link abreModal">Acessar</a></li>
                             {% endif %}
                             <li>
                                 <div class="footer-widget footer-link">
@@ -300,42 +305,7 @@
             </header>
         </main>
     </div>
-    <header style="display:none">
-        <h1>Sua Imobiliária</h1>
-        <nav>
-            <ul>
-                <li class="dropdown">
-                    <a href="#">Nossos Imóveis</a>
-                    <div class="dropdown-content">
-                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='alugar') }}">Para Alugar</a>
-                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='lancamentos') }}">Lançamentos</a>
-                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='prontos') }}">Prontos</a>
-                        <a href="{{ url_for('listar_imoveis_por_status', status_filtro='portfolio') }}">Portfólio (Todos)</a>
-                    </div>
-                </li>
-
-                {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
-                <li><a href="{{ url_for('cadastrar_imovel') }}">Cadastrar Imóvel</a></li>
-                {% endif %}
-
-                {% if current_user.is_authenticated and current_user.funcao == 'Admin' %}
-                <li><a href="{{ url_for('gerenciar_usuarios') }}" style="color: #ffeb3b; font-weight: bold;">PAINEL ADMIN</a></li>
-                {% endif %}
-
-                <li><a href="/sobre">Sobre Nós</a></li>
-                <li><a href="/contato">Contato</a></li>
-
-                {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('dashboard') }}" style="font-weight: bold;">Olá, {{ current_user.username }} ({{ current_user.funcao }})</a></li>
-                <li><a href="{{ url_for('logout') }}" style="background-color: #dc3545; border-radius: 5px;">Sair</a></li>
-                {% else %}
-                <li><a href="{{ url_for('login') }}" class="btn-acessar">Acessar</a></li>
-                {% endif %}
-                
-            </ul>
-        </nav>
-    </header>
-
+    
     <div class="content">
         {% block content %}{% endblock %}
     </div>

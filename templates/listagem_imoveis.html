@@ -1,0 +1,42 @@
+{# templates/listagem_imoveis.html #}
+{% extends "base.html" %}
+
+{% block title %}{{ titulo }}{% endblock %}
+{% block description %}{{ titulo }}{% endblock %}
+
+{% block content %}
+    <section class="mt-5 p-3">
+        <h2>{% if titulo %}{{ titulo }}{% else %}Imóveis em Destaque{% endif %} ({{ imoveis|length }} Resultados)</h2>
+        <p>Use a barra de navegação acima para filtrar por tipo.</p>
+        
+        <div class="lista-imoveis" style="display: flex; flex-wrap: wrap; gap: 20px;">
+            
+            {% for imovel in imoveis %}
+            
+            <div class="card-imovel" style="background-color: white; border: 1px solid #ddd; padding: 15px; width: 300px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+                <img src="{{ url_for('static', filename='fotos_imoveis/' + imovel.foto_principal) }}" 
+                    alt="Foto do Imóvel {{ imovel.codigo }}" 
+                    style="width: 100%; height: 200px; object-fit: cover; margin-bottom: 10px;">
+                
+                <h3 style="margin-top: 0; color: #007bff;">{{ imovel.tipo_imovel }} em {{ imovel.bairro }}</h3>
+                <span style="background-color: #28a745; color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.9em;">{{ imovel.status }}</span>
+
+                <p style="font-size: 1.5em; font-weight: bold; color: #333;">
+                    R$ {{ "%.2f"|format(imovel.valor) }} </p>
+
+                <ul style="list-style: none; padding: 0; margin: 10px 0;">
+                    <li>**Local:** {{ imovel.cidade }} - {{ imovel.bairro }}</li>
+                    <li>**Cod:** {{ imovel.codigo }}</li>
+                    <li>**Quartos:** {{ imovel.quartos }} | **Vagas:** {{ imovel.vagas }} | **Área:** {{ imovel.area_m2 }} m²</li>
+                </ul>
+                
+                <a href="{{ url_for('detalhes_imovel', codigo=imovel.codigo) }}" style="display: inline-block; padding: 8px 15px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px;">Ver Detalhes</a>
+            </div>
+            
+            {% else %}
+            <p>Ainda não há imóveis cadastrados nesta seção.</p>
+            {% endfor %}
+            
+        </div>
+    </section>
+{% endblock %}
