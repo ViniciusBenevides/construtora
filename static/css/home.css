@@ -1,0 +1,426 @@
+body {
+    margin: 0;
+}
+
+.opBusca {
+    color: #fff;
+    cursor: pointer;
+    padding-bottom: 12px;
+    font-size: 22px;
+    letter-spacing: 1px;
+    text-align: center;
+    border-bottom: 1px solid white;
+}
+
+.Aluga.active {
+    font-weight: bold;
+    color: #43c7ff;
+    border-bottom: 2px solid #43c7ff;
+}
+
+.Pronto.active {
+    font-weight: bold;
+    color: #d8b683;
+    border-bottom: 2px solid #d8b683;
+}
+
+.Lanca.active {
+    font-weight: bold;
+    color: #FF681C;
+    border-bottom: 2px solid #FF681C;
+}
+
+a.tp-caption:active,
+a.tp-caption:visited,
+a.tp-caption:focus {
+    outline: none !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+    border: none !important
+}
+
+a.ws-link:hover {
+    text-decoration: line-through !important
+}
+
+.tiny_bullet_slider .tp-bullet:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 25px;
+    top: -12px;
+    left: 0px;
+    background: transparent
+}
+
+.bullet-bar.tp-bullets:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    padding: 10px;
+    margin-left: -10px;
+    margin-top: -10px;
+    box-sizing: content-box
+}
+
+.bullet-bar .tp-bullet {
+    width: 60px;
+    height: 3px;
+    position: absolute;
+    background: #aaa;
+    background: rgba(204, 204, 204, 0.5);
+    cursor: pointer;
+    box-sizing: content-box
+}
+
+.bullet-bar .tp-bullet:hover,
+.bullet-bar .tp-bullet.selected {
+    background: rgba(204, 204, 204, 1)
+}
+
+.ws-shadow {
+    -webkit-box-shadow: 0px 30px 60px 0px rgba(0, 0, 0, 0.25) !important;
+    -moz-box-shadow: 0px 30px 60px 0px rgba(0, 0, 0, 0.25) !important;
+    box-shadow: 0px 30px 60px 0px rgba(0, 0, 0, 0.25) !important
+}
+
+.tiny_bullet_slider .tp-bullet:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 25px;
+    top: -12px;
+    left: 0px;
+    background: transparent
+}
+
+.bullet-bar.tp-bullets:before {
+    content: " ";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    padding: 10px;
+    margin-left: -10px;
+    margin-top: -10px;
+    box-sizing: content-box
+}
+
+.bullet-bar .tp-bullet {
+    width: 60px;
+    height: 3px;
+    position: absolute;
+    background: #aaa;
+    background: rgba(204, 204, 204, 0.5);
+    cursor: pointer;
+    box-sizing: content-box
+}
+
+.bullet-bar .tp-bullet:hover,
+.bullet-bar .tp-bullet.selected {
+    background: rgba(204, 204, 204, 1)
+}
+
+
+
+
+
+
+
+
+
+
+
+.property-by-location-st2 .location-name {
+    position: absolute;
+    bottom: 20px;
+    z-index: 1;
+    left: 24px;
+    line-height: 26px;
+}
+
+.property-by-location-st2 .location-count {
+    position: absolute;
+    bottom: 20px;
+    z-index: 1;
+    right: 24px;
+}
+
+.property-by-location-st2 .location-image {
+    height: 350px;
+    border-radius: 7px;
+    cursor: pointer;
+    overflow: hidden;
+    display: flex;
+}
+
+.location-image img {
+    object-fit: cover;
+    align-self: center;
+}
+
+.property-by-location-st2 .location-img {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+    -webkit-transition: .3s ease-in-out;
+    transition: .5s ease-in-out;
+}
+
+.property-by-location-st2 .location-img:hover {
+    -webkit-transform: scale(1.1);
+    transform: scale(1.1);
+}
+
+.property-by-location-st2 .location-image::after {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    content: '';
+    height: 100px;
+    width: 100%;
+    background-image: -moz-linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
+    background-image: -webkit-linear-gradient(90deg, rgb(0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
+    opacity: 0.659;
+    border-radius: 7px;
+}
+
+#slideshow .carousel-item {
+    opacity: 0;
+    transition: opacity .5s ease-in-out !important;
+}
+
+#slideshow .carousel-item.active {
+    opacity: 1;
+}
+
+#slideshowTp .carousel-item {
+    opacity: 0;
+    transition: opacity .6s ease-in-out !important;
+}
+
+#slideshowTp .carousel-item.active {
+    opacity: 1;
+}
+
+.slTopo {
+    position: relative;
+    height: 85vh;
+}
+
+.slTopo::before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to left, #000 24%, transparent 130%);
+    z-index: 3;
+}
+
+.carousel-item img {
+    max-height: 100% !important;
+}
+
+.trans-navigation {
+    background: #ffffff00;
+    backdrop-filter: none;
+}
+
+.infosTopo {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 4;
+}
+
+.formaTopo {
+    height: 50vh;
+    width: 100%;
+}
+
+.carousel-indicators li {
+    background-color: rgba(255, 255, 255, 0.5);
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+}
+
+.carousel-indicators .active {
+    background-color: rgba(255, 255, 255, 1);
+}
+
+.carousel-indicators {
+    position: absolute;
+    top: -7%;
+    gap: .8rem;
+    right: -110%;
+    transform: rotate(90deg);
+}
+
+.smPad h1 {
+    margin-top: 8rem !important;
+}
+
+image {
+    transition: opacity .5s ease-in-out !important;
+}
+
+@media(min-width: 1602px) {
+    .slTopo {
+        height: 75vh;
+    }
+
+    .smPad h1 {
+        font-size: 61px !important;
+        line-height: 69px !important;
+    }
+}
+
+@media(max-width: 992px) {
+    .buscaTopo select {
+        min-height: 33px !important;
+        font-size: 20px !important;
+    }
+
+    .buscaTopo input::placeholder {
+        font-size: 20px !important;
+    }
+
+    .buscaTopo input {
+        border-top: 1px solid white !important;
+        border-bottom: 1px solid white !important;
+        margin-top: .3rem;
+        padding-top: 1rem !important;
+        padding-bottom: 1rem !important;
+        margin-bottom: 1rem;
+        border-right: none !important;
+    }
+
+    .opBusca {
+        font-size: 17px !important;
+    }
+
+    .lupaB {
+        width: 65px !important;
+        padding: 0 0 0 10px !important;
+    }
+
+    .tlhSvg {
+        top: -2rem !important;
+        z-index: 3 !important;
+        width: 80% !important;
+        height: 78% !important;
+    }
+
+    .svgSlide {
+        display: none;
+    }
+
+    .smPad {
+        padding: 0 !important;
+    }
+
+    .hline {
+        right: 23% !important;
+    }
+
+    .buscaTopo {
+        padding: 10px 15px !important;
+    }
+
+    .formaTopo {
+        display: none;
+    }
+
+    .slTopo .bg-black {
+        display: none !important;
+    }
+
+    .infosTopo h1 {
+        font-size: 33px !important;
+        text-align: center;
+        line-height: 42px;
+    }
+}
+
+@media(max-width: 1600px) {
+    .carousel-indicators {
+        top: -7%;
+        right: -50%;
+    }
+}
+
+.buscaTopo select {
+    letter-spacing: 2px;
+    color: #fff !important;
+}
+
+.buscaTopo input {
+    height: auto;
+    background: transparent;
+    color: #fff !important;
+    border: none;
+}
+
+.buscaTopo input::placeholder {
+    color: #fff !important;
+}
+
+.buscaTopo {
+    height: auto;
+    position: relative;
+    background: rgba(250, 250, 250, 0.3);
+    border: 1px solid #FFFFFF;
+    backdrop-filter: blur(2px);
+    padding: 10px 4px 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    color: #fff;
+    text-transform: uppercase;
+}
+
+.itemA1 {
+    background: url('/images/banner/bannerbg1.png');
+    background-size: cover;
+    background-attachment: fixed;
+    max-height: 85vh;
+    background-position-y: 100%;
+}
+
+.itemA2 {
+    background: url('https://images.unsplash.com/photo-1531971589569-0d9370cbe1e5?q=80&w=1481&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+    background-size: cover;
+    background-attachment: fixed;
+    max-height: 85vh;
+    background-position-y: 60%;
+}
+
+.itemA3 {
+    background: url('https://sawala.inforcedata.com.br/api/image/950922.jpg');
+    background-size: cover;
+    background-attachment: fixed;
+    max-height: 85vh;
+    background-position-y: 60%;
+}
+
+.hline {
+    top: 0;
+    right: 12%;
+    z-index: 99;
+    position: absolute;
+    height: 100%;
+    width: 1px;
+    background: #fff;
+}
+
+.border-left {
+    height: 100%;
+    padding-left: 16px;
+}
+
+.gap1 {
+    gap: 12px;
+}

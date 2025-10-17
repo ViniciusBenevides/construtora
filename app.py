@@ -443,7 +443,9 @@ def login():
 
     # Se for GET ou o login falhou, mostra a página de login
     # Por enquanto, vamos usar um template de login dedicado, já que o modal é só visual.
-    return render_template("login.html", titulo="Acesso")
+    # Se houver uma falha de login (depois do POST) ou se for um acesso direto por GET,
+    # ele redireciona para a página inicial, onde o modal deve ser ativado pelo JS/Flash.
+    return redirect(url_for("pagina_inicial"))
 
 
 # --- ROTA DE LOGOUT ---

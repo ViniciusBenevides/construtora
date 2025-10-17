@@ -5,137 +5,302 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <base href="/">
+    <link rel="stylesheet" href="{{ url_for('static', filename='bootstrap/bootstrap.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/favicon.png') }}">
+    <link href="{{ url_for('static', filename='css/sweetAlert.css') }}" rel="stylesheet">
+    <script src="{{ url_for('static', filename='js/jquery-3.3.1.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/sweetAlert.js') }}"></script>
+    <script src="{{ url_for('static', filename='bootstrap/bootstrap.min.js') }}"></script>
     <title>Imóveis em Goiânia | URBS Portal</title>
     
     <title>{% block title %}{% endblock %}</title>
-    <meta name="description" content={% block description %}{% endblock %}>
+    <meta name="description" content="{% block description %}{% endblock %}">
 
     <style>
-        /* Reset básico */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
-            color: #333;
+        body{
+            background-color: black !important;
+        }
+    </style>
+    
+    <style>
+        .page {
+            position: relative;
+            display: flex;
+            flex-direction: column;
         }
 
-        /* Estilo do Header */
-        header {
-            background-color: #007bff; /* Azul vibrante */
-            color: white;
-            padding: 15px 20px;
+        main {
+            flex: 1;
+        }
+
+        .sidebar {
+            background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+        }
+
+        .top-row {
+            background-color: #f7f7f7;
+            border-bottom: 1px solid #d6d5d5;
+            justify-content: flex-end;
+            height: 3.5rem;
             display: flex;
-            justify-content: space-between;
             align-items: center;
         }
 
-        header h1 {
-            margin: 0;
-            font-size: 1.8em;
+            .top-row  a, .top-row  .btn-link {
+                white-space: nowrap;
+                margin-left: 1.5rem;
+                text-decoration: none;
+            }
+
+            .top-row  a:hover, .top-row .btn-link:hover {
+                text-decoration: underline;
+            }
+
+            .top-row a:first-child {
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+        @media (max-width: 640.98px) {
+            .top-row {
+                justify-content: space-between;
+            }
+
+            .top-row  a, .top-row  .btn-link {
+                margin-left: 0;
+            }
         }
 
-        /* Estilo da Navegação (Navbar) */
-        nav ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            display: flex;
+        @media (min-width: 641px) {
+            .page {
+                flex-direction: row;
+            }
+
+            .sidebar {
+                width: 250px;
+                height: 100vh;
+                position: sticky;
+                top: 0;
+            }
+
+            .top-row {
+                position: sticky;
+                top: 0;
+                z-index: 1;
+            }
+
+            .top-row.auth  a:first-child {
+                flex: 1;
+                text-align: right;
+                width: 0;
+            }
+
+            .top-row, article {
+                padding-left: 2rem !important;
+                padding-right: 1.5rem !important;
+            }
         }
 
-        nav ul li {
-            margin-left: 25px;
-            position: relative;
-        }
-
-        nav ul li a, .btn-acessar {
-            color: white;
-            text-decoration: none;
-            padding: 8px 10px;
-            display: block;
-            transition: background-color 0.3s;
-        }
-
-        nav ul li a:hover, .btn-acessar:hover {
-            background-color: #0056b3; /* Azul mais escuro no hover */
-            border-radius: 5px;
-        }
-
-        /* Estilo do Dropdown (menu suspenso) */
-        .dropdown-content {
-            display: none;
-            position: absolute;
-            background-color: #f9f9f9;
-            min-width: 160px;
-            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-            z-index: 1;
-            top: 100%; /* Aparece abaixo do item principal */
-            left: 0;
-        }
-
-        .dropdown:hover .dropdown-content {
-            display: block; /* Mostra o dropdown quando o mouse está sobre o item */
-        }
-
-        .dropdown-content a {
-            color: #333;
-            padding: 12px 16px;
-            text-decoration: none;
-            display: block;
-        }
-
-        .dropdown-content a:hover {
-            background-color: #ddd;
-        }
-
-        /* Estilo do Modal (Janela de Login) */
-        .modal {
-            display: none; /* Escondido por padrão */
-            position: fixed; 
-            z-index: 10; 
-            left: 0;
-            top: 0;
-            width: 100%; 
-            height: 100%; 
-            overflow: auto; 
-            background-color: rgba(0,0,0,0.4); /* Fundo preto semi-transparente */
-            padding-top: 60px;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            margin: 5% auto; /* 5% do topo e centralizado */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%; /* Pode ser ajustado */
-            max-width: 400px;
-            border-radius: 8px;
-            text-align: center;
-        }
-
-        .close {
-            color: #aaa;
-            float: right;
-            font-size: 28px;
-            font-weight: bold;
-        }
-
-        .close:hover,
-        .close:focus {
-            color: black;
-            text-decoration: none;
-            cursor: pointer;
-        }
-
-        /* Estilo principal onde o conteúdo de cada página entra */
-        .content {
-            padding: 20px;
-        }
     </style>
 </head>
 <body>
+    <div class="page" style="display:initial !important">
+        <main>
+            <header class=" trans-navigation navbar  fixed-top">
+                <div class="container"><a href="/" class="active" aria-current="page"><img
+                            src="{{ url_for('static', filename='images/logo-branca-morada-do-sol.png') }}" alt="Logo da Imobili&#xE1;ria"
+                            class="img-fluid b-logo" style="height:60px"/></a>
+                    <input type="checkbox" id="nav-toggle" class="nav-toggle" onchange="toggleNavigation()">
+                    <nav class="desktop-nav mt-3">
+                        <ul>
+                            <li class="nav-item dropdown"><a
+                                    class="nav-link dropdown-toggle d-flex align-items-center" href="#!" role="button"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    Nossos imóveis
+                                    <svg class="ml-2" width="11" height="8" viewBox="0 0 11 8" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path d="M1.24341 1.1398L5.59712 6.2796L10.495 1.1398" stroke="white"></path>
+                                    </svg></a>
+                                    
+                                <ul class="dropdown-menu text-left" aria-labelledby="navbarWelcome">
+                                    <li class="dropdown dropdown-submenu dropright"><a
+                                            href="{{ url_for('listar_imoveis_por_status', status_filtro='prontos') }}"
+                                            class="dropdown-item d-flex align-items-center justify-content-between">Prontos</a>
+                                    </li>
+                                    <li class="dropdown dropdown-submenu dropright"><a
+                                            href="{{ url_for('listar_imoveis_por_status', status_filtro='lancamentos') }}"
+                                            class="dropdown-item">Lançamentos</a></li>
+                                    <li class="dropdown dropdown-submenu dropright"><a
+                                            href="{{ url_for('listar_imoveis_por_status', status_filtro='alugar') }}"
+                                            class="dropdown-item d-flex align-items-center justify-content-between">Aluguel</a>
+                                    </li>
+                                    <li class="dropdown dropdown-submenu dropright"><a
+                                            href="{{ url_for('listar_imoveis_por_status', status_filtro='portfolio') }}"
+                                            class="dropdown-item d-flex align-items-center justify-content-between">Portfólio (Todos)</a>
+                                    </li>
+                                </ul>
+                            </li>
+                            {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
+                                <li><a href="{{ url_for('cadastrar_imovel') }}" class="nav-link">Cadastrar Imóvel</a></li>
+                            {% endif %}
+                            {% if current_user.is_authenticated and current_user.funcao == 'Admin' %}
+                                <li><a href="{{ url_for('gerenciar_usuarios') }}" class="nav-link">PAINEL ADMIN</a></li>
+                            {% endif %}
+                            <li><a href="#" class="nav-link">Contato</a></li>
+                            <li><a href="#" class="nav-link">Sobre Nós</a></li>
+                            {% if current_user.is_authenticated %}
+                                <li><a href="{{ url_for('dashboard') }}" class="nav-link">Olá, {{ current_user.username }}</a></li>
+                                <li><a href="{{ url_for('logout') }}" class="nav-link">Sair</a></li>
+                            {% else %}
+                                <li><a href="#" class="nav-link abreModal">Acessar</a></li>
+                            {% endif %}
 
-    <header>
+                        </ul>
+                    </nav>
+
+                    <label for="nav-toggle" class="nav-toggle-label"><span></span></label>
+
+                    <nav class="bg-navmobile">
+                        <ul class="list-mobile trans-navigation"
+                            style="overflow: scroll; height: 100vh; scrollbar-width: none; padding: 2rem;padding-bottom: 7rem;">
+                            <li class="w-100 d-flex justify-content-end"><label for="nav-toggle"
+                                    style="cursor: pointer;"><svg width="44" height="40"
+                                        viewBox="0 0 44 40" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M0.849121 39V33.24H4.15712V33.828H1.43712V35.828H3.67712V36.412H1.43712V39H0.849121Z"
+                                            fill="white"></path>
+                                        <path
+                                            d="M7.68037 39V33.24H11.2804V33.804H8.26837V35.796H10.8004V36.36H8.26837V38.436H11.2804V39H7.68037Z"
+                                            fill="white"></path>
+                                        <path
+                                            d="M17.1717 39.12C16.5984 39.12 16.1144 38.9933 15.7197 38.74C15.3251 38.484 15.0264 38.1307 14.8237 37.68C14.6211 37.2293 14.5197 36.7093 14.5197 36.12C14.5197 35.5307 14.6211 35.0107 14.8237 34.56C15.0264 34.1093 15.3251 33.7573 15.7197 33.504C16.1144 33.248 16.5984 33.12 17.1717 33.12C17.8411 33.12 18.3877 33.292 18.8117 33.636C19.2357 33.9773 19.5264 34.436 19.6837 35.012L19.0837 35.168C18.9611 34.712 18.7411 34.3507 18.4237 34.084C18.1064 33.8173 17.6891 33.684 17.1717 33.684C16.7211 33.684 16.3464 33.7867 16.0477 33.992C15.7491 34.1973 15.5237 34.484 15.3717 34.852C15.2224 35.2173 15.1451 35.64 15.1397 36.12C15.1371 36.6 15.2104 37.0227 15.3597 37.388C15.5117 37.7533 15.7384 38.04 16.0397 38.248C16.3437 38.4533 16.7211 38.556 17.1717 38.556C17.6891 38.556 18.1064 38.4227 18.4237 38.156C18.7411 37.8867 18.9611 37.5253 19.0837 37.072L19.6837 37.228C19.5264 37.804 19.2357 38.264 18.8117 38.608C18.3877 38.9493 17.8411 39.12 17.1717 39.12Z"
+                                            fill="white"></path>
+                                        <path
+                                            d="M23.3663 39V33.24H23.9543V35.836H27.1383V33.24H27.7223V39H27.1383V36.4H23.9543V39H23.3663Z"
+                                            fill="white"></path>
+                                        <path
+                                            d="M31.2429 39L33.2269 33.24H34.0069L35.9909 39H35.3789L33.4949 33.568H33.7269L31.8549 39H31.2429ZM32.1269 37.604V37.052H35.1029V37.604H32.1269Z"
+                                            fill="white"></path>
+                                        <path
+                                            d="M39.5132 39V33.24H41.7372C41.7932 33.24 41.8558 33.2427 41.9252 33.248C41.9972 33.2507 42.0692 33.2587 42.1412 33.272C42.4425 33.3173 42.6972 33.4227 42.9052 33.588C43.1158 33.7507 43.2745 33.956 43.3812 34.204C43.4905 34.452 43.5452 34.7267 43.5452 35.028C43.5452 35.4627 43.4305 35.84 43.2012 36.16C42.9719 36.48 42.6438 36.6813 42.2172 36.764L42.0132 36.812H40.1012V39H39.5132ZM43.0012 39L41.8652 36.656L42.4292 36.44L43.6772 39H43.0012ZM40.1012 36.252H41.7212C41.7692 36.252 41.8252 36.2493 41.8892 36.244C41.9532 36.2387 42.0158 36.2293 42.0772 36.216C42.2745 36.1733 42.4359 36.092 42.5612 35.972C42.6892 35.852 42.7839 35.7093 42.8452 35.544C42.9092 35.3787 42.9412 35.2067 42.9412 35.028C42.9412 34.8493 42.9092 34.6773 42.8452 34.512C42.7839 34.344 42.6892 34.2 42.5612 34.08C42.4359 33.96 42.2745 33.8787 42.0772 33.836C42.0158 33.8227 41.9532 33.8147 41.8892 33.812C41.8252 33.8067 41.7692 33.804 41.7212 33.804H40.1012V36.252Z"
+                                            fill="white"></path>
+                                        <path
+                                            d="M11.6456 1.51575L12.7198 0.441534L34.204 21.9258L33.1298 23L11.6456 1.51575Z"
+                                            fill="#D9D9D9"></path>
+                                        <path d="M32.4844 0L33.5586 1.07421L12.0744 22.5585L11.0002 21.4843L32.4844 0Z"
+                                            fill="#D9D9D9"></path>
+                                    </svg></label></li>
+                            <li class="mb-5"><img src="{{ url_for('static', filename='images/logo-branca-morada-do-sol.png') }}"
+                                    alt="Logo da Imobili&#xE1;ria" class="img-fluid b-logo"
+                                    style="max-height:130px; -webkit-max-width: 150px;max-width: 150px; object-fit: contain;"
+                                    /></li>
+                            <li>
+                                <div class="abreModal">
+                                    <div class="footer-widget footer-link">
+                                        <h4 class="text-white">ACESSAR</h4>
+                                    </div>
+                                </div>
+                            </li>
+                            {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
+                                <li>
+                                    <div class="footer-widget footer-link"><a
+                                            href="{{ url_for('cadastrar_imovel') }}">
+                                            <h4 class="text-white">Cadastrar Imóvel</h4>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            {% if current_user.is_authenticated and current_user.funcao == 'Admin' %}
+                                <li>
+                                    <div class="footer-widget footer-link"><a
+                                            href="{{ url_for('gerenciar_usuarios') }}">
+                                            <h4 class="text-white">PAINEL ADMIN</h4>
+                                        </a>
+                                    </div>
+                                </li>
+                            {% endif %}
+                            <li>
+                                <div class="footer-widget footer-link">
+                                    <h4 class="text-white">NOSSOS IMÓVEIS</h4>
+                                    <ul class="list-footer">
+                                        <li><a
+                                                href="{{ url_for('listar_imoveis_por_status', status_filtro='prontos') }}"
+                                                onclick="fecharMenu()">PRONTOS PARA MORAR</a></li>
+                                        <li><a
+                                                href="{{ url_for('listar_imoveis_por_status', status_filtro='lancamentos') }}"
+                                                onclick="fecharMenu()">LANÇAMENTOS</a></li>
+                                        <li><a href="{{ url_for('listar_imoveis_por_status', status_filtro='alugar') }}"
+                                                onclick="fecharMenu()">Aluguel</a></li>
+                                        <li><a href="{{ url_for('listar_imoveis_por_status', status_filtro='portfolio') }}"
+                                             onclick="fecharMenu()">Portfólio (Todos)</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+
+                            <li>
+                                <div class="footer-widget footer-link">
+                                    <h4 class="text-white">AGÊNCIAS</h4>
+                                    <ul class="list-footer">
+                                        <li><a href="">ELITE GÓIAS</a></li>
+                                        <li><a href="">ELITE MT</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <ul class="mt-4 mb-4 list-footer">
+                                    <li><a href="#" onclick="fecharMenu()">
+                                            <h4 class="text-white">SOBRE NÓS</h4>
+                                        </a></li>
+                                    <li><a href="#" onclick="fecharMenu()">
+                                            <h4 class="text-white mt-4">ENTRE EM CONTATO</h4>
+                                        </a></li>
+                                </ul>
+                            </li>
+                            <li>
+                                <div class="footer-widget footer-link">
+                                    <h4 class="text-white">INSTITUCIONAL</h4>
+                                    <ul class="list-footer">
+                                        <li><a href="#"
+                                                onclick="fecharMenu()">POLÍTICA DE PRIVACIDADE
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                            <li class="mt-5">
+                                <div class="mt-5 d-flex " style="justify-content:space-evenly"><a
+                                        href="https://www.facebook.com/" target="_blank"><svg
+                                            width="35" height="35" viewBox="0 0 35 35" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+                                                fill="white"></path>
+                                            <path
+                                                d="M12.2712 18.652H14.4635V27.6774C14.4635 27.8556 14.6079 28 14.7861 28H18.5032C18.6814 28 18.8258 27.8556 18.8258 27.6774V18.6945H21.3461C21.5099 18.6945 21.6478 18.5715 21.6665 18.4088L22.0493 15.0861C22.0598 14.9946 22.0308 14.9031 21.9697 14.8345C21.9085 14.7659 21.8208 14.7266 21.7289 14.7266H18.8259V12.6437C18.8259 12.0159 19.164 11.6975 19.8308 11.6975C19.9259 11.6975 21.7289 11.6975 21.7289 11.6975C21.9071 11.6975 22.0515 11.553 22.0515 11.3749V8.32497C22.0515 8.14677 21.9071 8.00239 21.7289 8.00239H19.1131C19.0946 8.00148 19.0537 8 18.9933 8C18.5394 8 16.9618 8.0891 15.7156 9.23555C14.3348 10.506 14.5268 12.0272 14.5726 12.2909V14.7265H12.2712C12.093 14.7265 11.9486 14.8709 11.9486 15.0491V18.3294C11.9486 18.5075 12.093 18.652 12.2712 18.652Z"
+                                                fill="black"></path>
+                                        </svg></a><a href="https://www.instagram.com/" target="_blank"
+                                        ><svg width="35" height="35" viewBox="0 0 35 35" fill="none"
+                                            xmlns="http://www.w3.org/2000/svg">
+                                            <path
+                                                d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+                                                fill="white"></path>
+                                            <path
+                                                d="M18 8.98202C20.9371 8.98202 21.285 8.9932 22.4449 9.04612C23.5174 9.09507 24.0998 9.27427 24.4875 9.42487C25.0009 9.62441 25.3674 9.86282 25.7523 10.2477C26.1372 10.6326 26.3756 10.9991 26.5751 11.5125C26.7257 11.9002 26.9049 12.4826 26.9539 13.5551C27.0068 14.715 27.018 15.0629 27.018 18C27.018 20.9372 27.0068 21.285 26.9539 22.4449C26.9049 23.5174 26.7257 24.0999 26.5751 24.4875C26.3756 25.0009 26.1372 25.3674 25.7523 25.7523C25.3674 26.1372 25.0009 26.3756 24.4875 26.5751C24.0998 26.7258 23.5174 26.905 22.4449 26.9539C21.2852 27.0068 20.9373 27.018 18 27.018C15.0627 27.018 14.7148 27.0068 13.5551 26.9539C12.4826 26.905 11.9001 26.7258 11.5125 26.5751C10.9991 26.3756 10.6326 26.1372 10.2477 25.7523C9.86278 25.3674 9.62437 25.0009 9.42487 24.4875C9.27422 24.0999 9.09503 23.5174 9.04608 22.445C8.99316 21.285 8.98198 20.9372 8.98198 18C8.98198 15.0629 8.99316 14.715 9.04608 13.5551C9.09503 12.4826 9.27422 11.9002 9.42487 11.5125C9.62437 10.9991 9.86278 10.6326 10.2477 10.2477C10.6326 9.86282 10.9991 9.62441 11.5125 9.42487C11.9001 9.27427 12.4826 9.09507 13.555 9.04612C14.715 8.9932 15.0628 8.98202 18 8.98202ZM18 7C15.0125 7 14.638 7.01266 13.4647 7.0662C12.2938 7.11964 11.4943 7.30556 10.7945 7.57751C10.0712 7.85862 9.45775 8.23475 8.84623 8.84627C8.2347 9.45779 7.85858 10.0712 7.57746 10.7946C7.30552 11.4943 7.1196 12.2939 7.06615 13.4648C7.01262 14.638 7 15.0126 7 18C7 20.9875 7.01262 21.3621 7.06615 22.5353C7.1196 23.7062 7.30552 24.5057 7.57746 25.2055C7.85858 25.9288 8.2347 26.5423 8.84623 27.1538C9.45775 27.7653 10.0712 28.1414 10.7945 28.4225C11.4943 28.6945 12.2938 28.8804 13.4647 28.9338C14.638 28.9874 15.0125 29 18 29C20.9874 29 21.362 28.9874 22.5352 28.9338C23.7061 28.8804 24.5057 28.6945 25.2054 28.4225C25.9288 28.1414 26.5422 27.7653 27.1537 27.1538C27.7653 26.5423 28.1414 25.9288 28.4225 25.2055C28.6944 24.5057 28.8804 23.7062 28.9338 22.5353C28.9873 21.3621 29 20.9875 29 18C29 15.0126 28.9873 14.638 28.9338 13.4648C28.8804 12.2939 28.6944 11.4943 28.4225 10.7946C28.1414 10.0712 27.7653 9.45779 27.1537 8.84627C26.5422 8.23475 25.9288 7.85862 25.2054 7.57751C24.5057 7.30556 23.7061 7.11964 22.5352 7.0662C21.362 7.01266 20.9874 7 18 7ZM18 12.3514C14.8803 12.3514 12.3513 14.8804 12.3513 18C12.3513 21.1197 14.8803 23.6487 18 23.6487C21.1196 23.6487 23.6486 21.1197 23.6486 18C23.6486 14.8804 21.1196 12.3514 18 12.3514ZM18 21.6667C15.9749 21.6667 14.3333 20.0251 14.3333 18C14.3333 15.975 15.9749 14.3333 18 14.3333C20.025 14.3333 21.6667 15.975 21.6667 18C21.6667 20.0251 20.025 21.6667 18 21.6667ZM25.1918 12.1282C25.1918 12.8572 24.6008 13.4482 23.8718 13.4482C23.1428 13.4482 22.5518 12.8572 22.5518 12.1282C22.5518 11.3992 23.1428 10.8082 23.8718 10.8082C24.6008 10.8082 25.1918 11.3992 25.1918 12.1282Z"
+                                                fill="black"></path>
+                                        </svg></a>
+                                </div>
+                            </li>
+                        </ul>
+                    </nav>
+                    <div class="bgc-navmobile" id="bgc-navmobile" onclick="fecharMenu()"></div>
+                </div>
+            </header>
+        </main>
+    </div>
+    <header style="display:none">
         <h1>Sua Imobiliária</h1>
         <nav>
             <ul>
@@ -156,10 +321,6 @@
                 {% if current_user.is_authenticated and current_user.funcao == 'Admin' %}
                 <li><a href="{{ url_for('gerenciar_usuarios') }}" style="color: #ffeb3b; font-weight: bold;">PAINEL ADMIN</a></li>
                 {% endif %}
-                
-                {% if current_user.is_authenticated and current_user.funcao in ['Admin', 'Corretor'] %}
-                <li><a href="{{ url_for('cadastrar_imovel') }}">Cadastrar Imóvel</a></li>
-                {% endif %}
 
                 <li><a href="/sobre">Sobre Nós</a></li>
                 <li><a href="/contato">Contato</a></li>
@@ -170,6 +331,7 @@
                 {% else %}
                 <li><a href="{{ url_for('login') }}" class="btn-acessar">Acessar</a></li>
                 {% endif %}
+                
             </ul>
         </nav>
     </header>
@@ -177,41 +339,302 @@
     <div class="content">
         {% block content %}{% endblock %}
     </div>
-    
-    <div id="modalAcesso" class="modal">
-      <div class="modal-content">
-        <span class="close">&times;</span>
-        <h2>Acesso</h2>
-        <p>Login para Administradores e Corretores</p>
-        <form>
-            <input type="text" placeholder="E-mail ou Usuário" style="width: 90%; padding: 10px; margin: 5px 0;">
-            <input type="password" placeholder="Senha" style="width: 90%; padding: 10px; margin: 5px 0;">
-            <button type="submit" style="padding: 10px 20px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Entrar</button>
-        </form>
-      </div>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/nouislider.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/busca.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/select2.min.css') }}">
+    <script src="{{ url_for('static', filename='js/select2.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/nouislider.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/busca.js') }}"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/layers.css') }}">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/settings.css') }}">
+    <script type="text/javascript" src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/master.js') }}"></script>
+
+    <div class="modal-login col-lg-12 justify-content-center align-items-center" id="modal" style="">
+        <div class="modal-content row justify-content-between m-0 col-lg-4 largura-mobile"><img
+                src="{{ url_for('static', filename='images/telhadin3.png') }}" class="telhadinM">
+            <img src="{{ url_for('static', filename='images/telhadin3.png') }}" class="telhadinM2">
+            <div class=" col-lg-12 d-flex justify-content-end"><span class="close" id="close"
+                    >&times;</span></div>
+            <div class="col-lg-12 someTilt">
+                <h2 class="text-center">Faça login <br class="brsin">na sua conta</h2>
+                <p class="text-left fs15 mb-0 mt-3 col-lg-10 text-center fwb"
+                    style="color: #757575;letter-spacing: 1px;">
+                    UMA ÁREA EXCLUSIVA PARA CORRETORES E ADMINISTRADORES.
+                </p>
+            </div>
+            <div class="col-lg-12 mt-3 mb-3"><button class="mailpass" onclick="mostrarFormulario()"
+                    id="mailLog">Entrar com email e senha</button>
+                <button asp-controller="" class="googlebtn d-none" id="googleLog"><span
+                        >Entrar com o goole</span><img class="ml-3" src="images/icoG.png"
+                        ></button>
+                <button class="fcbtn d-none" id="faceLog"><span>Entrar com o facebook
+                    </span>
+                    <svg class="ml-3" width="30" height="30" viewBox="0 0 34 34" fill="none"
+                        xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M17 0C7.64999 0 0 7.66365 0 17.1024C0 25.6366 6.22199 32.7199 14.348 34V22.0522H10.03V17.1024H14.348V13.3303C14.348 9.04618 16.881 6.69076 20.774 6.69076C22.627 6.69076 24.565 7.01505 24.565 7.01505V11.2309H22.423C20.315 11.2309 19.652 12.5452 19.652 13.8936V17.1024H24.378L23.613 22.0522H19.652V34C23.6579 33.3647 27.3057 31.3126 29.9368 28.2139C32.5679 25.1153 34.0091 21.1742 34 17.1024C34 7.66365 26.35 0 17 0Z"
+                            fill="white"></path>
+                    </svg></button>
+
+                <div class="modal-form position-relative" id="formularioLogin" style="display: none;">
+                     <form method="POST" action="{{ url_for('login') }}">
+                        <div class="form-group col-12 mt-3 contact-f"><input type="text"
+                                placeholder="EMAIL" name="email_ou_user" class="form-control valid" /></div>
+                        <div class="form-group col-12 contact-f"><input type="password"
+                                placeholder="SENHA" name="senha" class="form-control valid" /></div>
+
+                        <div class="row m-0">
+                            <div class="col-lg-12 bt-input p-0">
+                                <div class=" btn btn-black" ><input name="submit" type="submit"
+                                        class=" position-relative" value="Entrar"></div>
+                            </div>
+
+                            <div class="col-lg-12 mt-4 bt-input p-0 cursor" id="cadastra">
+                                
+                            </div>
+                        </div>
+                    </form>
+                    <div class="mt-4 esqueci cursor" onclick="esqueceu()">
+                        <div class="lineCad"></div>
+                        <span class="cad">Esqueci a senha</span>
+                    </div>
+                    <svg onclick="reverterAlteracoes()" class="mt-5 col-lg-12 cursor" width="84" height="16"
+                        viewBox="0 0 84 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M28.824 14L25.08 2.48H26.816L30.008 12.312L33.24 2.48H34.976L31.232 14H28.824ZM40.678 14.24C39.526 14.24 38.5447 13.9893 37.734 13.488C36.9233 12.9813 36.302 12.2773 35.87 11.376C35.4433 10.4747 35.23 9.42933 35.23 8.24C35.23 7.05067 35.4433 6.00533 35.87 5.104C36.302 4.20267 36.9233 3.50133 37.734 3C38.5447 2.49333 39.526 2.24 40.678 2.24C41.8247 2.24 42.8033 2.49333 43.614 3C44.43 3.50133 45.0513 4.20267 45.478 5.104C45.9047 6.00533 46.118 7.05067 46.118 8.24C46.118 9.42933 45.9047 10.4747 45.478 11.376C45.0513 12.2773 44.43 12.9813 43.614 13.488C42.8033 13.9893 41.8247 14.24 40.678 14.24ZM40.678 12.648C41.494 12.6587 42.1713 12.48 42.71 12.112C43.254 11.7387 43.662 11.2213 43.934 10.56C44.206 9.89333 44.342 9.12 44.342 8.24C44.342 7.36 44.206 6.592 43.934 5.936C43.662 5.27467 43.254 4.76 42.71 4.392C42.1713 4.024 41.494 3.83733 40.678 3.832C39.862 3.82133 39.182 4 38.638 4.368C38.0993 4.736 37.694 5.25333 37.422 5.92C37.15 6.58667 37.0113 7.36 37.006 8.24C37.0007 9.12 37.134 9.89067 37.406 10.552C37.678 11.208 38.086 11.72 38.63 12.088C39.1793 12.456 39.862 12.6427 40.678 12.648ZM47.8738 14V2.48H49.5458V12.424H54.7618V14H47.8738ZM57.3983 14V4.056H53.5663V2.48H62.9023V4.056H59.0703V14H57.3983ZM63.07 14L66.814 2.48H69.222L72.966 14H71.23L67.782 3.488H68.214L64.806 14H63.07ZM65.014 11.4V9.832H71.03V11.4H65.014ZM74.4013 14V2.48H79.0573C79.1693 2.48 79.3079 2.48533 79.4733 2.496C79.6386 2.50133 79.7959 2.51733 79.9453 2.544C80.5853 2.64533 81.1186 2.864 81.5452 3.2C81.9773 3.536 82.2999 3.96 82.5133 4.472C82.7266 4.984 82.8333 5.54933 82.8333 6.168C82.8333 7.08533 82.5986 7.87733 82.1293 8.544C81.6599 9.20533 80.9559 9.61867 80.0173 9.784L79.3373 9.864H76.0733V14H74.4013ZM81.1373 14L78.8653 9.312L80.5533 8.88L83.0493 14H81.1373ZM76.0733 8.28H78.9933C79.0999 8.28 79.2173 8.27467 79.3453 8.264C79.4786 8.25333 79.6039 8.23467 79.7213 8.208C80.0626 8.128 80.3373 7.98133 80.5453 7.768C80.7533 7.54933 80.9026 7.29867 80.9933 7.016C81.0839 6.73333 81.1293 6.45067 81.1293 6.168C81.1293 5.88533 81.0839 5.60533 80.9933 5.328C80.9026 5.04533 80.7533 4.79733 80.5453 4.584C80.3373 4.36533 80.0626 4.216 79.7213 4.136C79.6039 4.104 79.4786 4.08267 79.3453 4.072C79.2173 4.06133 79.0999 4.056 78.9933 4.056H76.0733V8.28Z"
+                            fill="#121212"></path>
+                        <path
+                            d="M0.739693 5.79658L0.369852 6.17944L0 5.79658L0.369852 5.41377L0.739693 5.79658ZM18 14.4586C18 14.7576 17.7658 15 17.477 15C17.1881 15 16.9539 14.7576 16.9539 14.4586H18ZM5.60025 11.5932L0.369852 6.17944L1.10953 5.41377L6.33993 10.8275L5.60025 11.5932ZM0.369852 5.41377L5.60025 0L6.33993 0.765616L1.10953 6.17944L0.369852 5.41377ZM0.739693 5.25521H11.2005V6.33796H0.739693V5.25521ZM18 12.2931V14.4586H16.9539V12.2931H18ZM11.2005 5.25521C14.9557 5.25521 18 8.40613 18 12.2931H16.9539C16.9539 9.00414 14.3781 6.33796 11.2005 6.33796V5.25521Z"
+                            fill="#121212"></path>
+                    </svg>
+                </div>
+
+                <div class="modal-form" id="formCadastro" style="display: none;">
+                    <form method="post" action="/Portal"><input type="hidden" name="__RequestVerificationToken"
+                            value="CfDJ8LrXM5P7q2dBlh6nZ6Pt3SPUaTLHvWHueQar13-t1gxshQhbhGe3RtLq5TtGbbmPKvXR4xUt9tML08pRVZX3g0HnzX9-t0ef5jzTv6Vs9fBMb4kFHXPFFeglUkDDuiVc4yCxTjONsG7zX5v3w762fzQ" />
+
+                        <div class="form-group col-12 contact-f"><input type="text"
+                                placeholder="NOME" name="name" class="form-control valid" /></div>
+                        <div class="form-group col-12 contact-f"><input type="email"
+                                placeholder="SEU MELHOR EMAIL" name="email" class="form-control valid" /></div>
+                        <div class="form-group col-12 contact-f"><input type="password"
+                                placeholder="SENHA" name="senha" class="form-control valid" /></div>
+                        <div class="form-group col-12 contact-f"><input type="password"
+                                placeholder="CONFIRMAR SENHA" name="senha" class="form-control valid" /></div>
+
+                        <small>Ao clicar em <strong>CADASTRAR</strong> você concorda
+                            com nossa <a href="/Portal/politica-de-privacidade">Política de
+                                Privacidade</a></small>
+                        <div class="col-lg-12 mt-4 bt-input p-0">
+                            <div class=" btn btn-black" ><input name="submit" type="submit"
+                                    class=" position-relative" value="Cadastrar"></div>
+                        </div>
+                    </form>
+                    <svg onclick="reverterAlteracoes()" class="col-lg-12 mt-4 cursor" width="84" height="16"
+                        viewBox="0 0 84 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M28.824 14L25.08 2.48H26.816L30.008 12.312L33.24 2.48H34.976L31.232 14H28.824ZM40.678 14.24C39.526 14.24 38.5447 13.9893 37.734 13.488C36.9233 12.9813 36.302 12.2773 35.87 11.376C35.4433 10.4747 35.23 9.42933 35.23 8.24C35.23 7.05067 35.4433 6.00533 35.87 5.104C36.302 4.20267 36.9233 3.50133 37.734 3C38.5447 2.49333 39.526 2.24 40.678 2.24C41.8247 2.24 42.8033 2.49333 43.614 3C44.43 3.50133 45.0513 4.20267 45.478 5.104C45.9047 6.00533 46.118 7.05067 46.118 8.24C46.118 9.42933 45.9047 10.4747 45.478 11.376C45.0513 12.2773 44.43 12.9813 43.614 13.488C42.8033 13.9893 41.8247 14.24 40.678 14.24ZM40.678 12.648C41.494 12.6587 42.1713 12.48 42.71 12.112C43.254 11.7387 43.662 11.2213 43.934 10.56C44.206 9.89333 44.342 9.12 44.342 8.24C44.342 7.36 44.206 6.592 43.934 5.936C43.662 5.27467 43.254 4.76 42.71 4.392C42.1713 4.024 41.494 3.83733 40.678 3.832C39.862 3.82133 39.182 4 38.638 4.368C38.0993 4.736 37.694 5.25333 37.422 5.92C37.15 6.58667 37.0113 7.36 37.006 8.24C37.0007 9.12 37.134 9.89067 37.406 10.552C37.678 11.208 38.086 11.72 38.63 12.088C39.1793 12.456 39.862 12.6427 40.678 12.648ZM47.8738 14V2.48H49.5458V12.424H54.7618V14H47.8738ZM57.3983 14V4.056H53.5663V2.48H62.9023V4.056H59.0703V14H57.3983ZM63.07 14L66.814 2.48H69.222L72.966 14H71.23L67.782 3.488H68.214L64.806 14H63.07ZM65.014 11.4V9.832H71.03V11.4H65.014ZM74.4013 14V2.48H79.0573C79.1693 2.48 79.3079 2.48533 79.4733 2.496C79.6386 2.50133 79.7959 2.51733 79.9453 2.544C80.5853 2.64533 81.1186 2.864 81.5452 3.2C81.9773 3.536 82.2999 3.96 82.5133 4.472C82.7266 4.984 82.8333 5.54933 82.8333 6.168C82.8333 7.08533 82.5986 7.87733 82.1293 8.544C81.6599 9.20533 80.9559 9.61867 80.0173 9.784L79.3373 9.864H76.0733V14H74.4013ZM81.1373 14L78.8653 9.312L80.5533 8.88L83.0493 14H81.1373ZM76.0733 8.28H78.9933C79.0999 8.28 79.2173 8.27467 79.3453 8.264C79.4786 8.25333 79.6039 8.23467 79.7213 8.208C80.0626 8.128 80.3373 7.98133 80.5453 7.768C80.7533 7.54933 80.9026 7.29867 80.9933 7.016C81.0839 6.73333 81.1293 6.45067 81.1293 6.168C81.1293 5.88533 81.0839 5.60533 80.9933 5.328C80.9026 5.04533 80.7533 4.79733 80.5453 4.584C80.3373 4.36533 80.0626 4.216 79.7213 4.136C79.6039 4.104 79.4786 4.08267 79.3453 4.072C79.2173 4.06133 79.0999 4.056 78.9933 4.056H76.0733V8.28Z"
+                            fill="#121212"></path>
+                        <path
+                            d="M0.739693 5.79658L0.369852 6.17944L0 5.79658L0.369852 5.41377L0.739693 5.79658ZM18 14.4586C18 14.7576 17.7658 15 17.477 15C17.1881 15 16.9539 14.7576 16.9539 14.4586H18ZM5.60025 11.5932L0.369852 6.17944L1.10953 5.41377L6.33993 10.8275L5.60025 11.5932ZM0.369852 5.41377L5.60025 0L6.33993 0.765616L1.10953 6.17944L0.369852 5.41377ZM0.739693 5.25521H11.2005V6.33796H0.739693V5.25521ZM18 12.2931V14.4586H16.9539V12.2931H18ZM11.2005 5.25521C14.9557 5.25521 18 8.40613 18 12.2931H16.9539C16.9539 9.00414 14.3781 6.33796 11.2005 6.33796V5.25521Z"
+                            fill="#121212"></path>
+                    </svg>
+                </div>
+
+                <div class="modal-form" id="formEsqueceu" style="display: none;">
+                    <div class="col-lg-12 d-flex flex-column align-items-center someTilt">
+                        <h2 class="text-center">REDEFINIR SENHA</h2>
+                        <p class="text-left fs16 col-lg-10 text-center" style="color: #757575;">
+                            ENVIAREMOS UM EMAIL PARA VOCÊ DEFINIR UMA NOVA SENHA.
+                        </p>
+                    </div>
+
+                    <form method="post" action="/Portal"><input type="hidden" name="__RequestVerificationToken"
+                            value="CfDJ8LrXM5P7q2dBlh6nZ6Pt3SPUaTLHvWHueQar13-t1gxshQhbhGe3RtLq5TtGbbmPKvXR4xUt9tML08pRVZX3g0HnzX9-t0ef5jzTv6Vs9fBMb4kFHXPFFeglUkDDuiVc4yCxTjONsG7zX5v3w762fzQ" />
+
+                        <div class="form-group col-12 mt-4">
+                            <div class=" contact-f"><input type="email"
+                                    placeholder="EMAIL PARA REDEFINI&#xC7;&#xC3;O" name="email"
+                                    class="form-control valid" /></div>
+                        </div>
+
+                        <div class="col-lg-12 mt-4 bt-input">
+                            <div class=" btn btn-black"><input name="submit" type="submit"
+                                    class=" position-relative" value="Enviar"></div>
+                        </div>
+                    </form>
+                    <svg onclick="reverterAlteracoes()" class="col-lg-12 mt-4 cursor" width="84" height="16"
+                        viewBox="0 0 84 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                            d="M28.824 14L25.08 2.48H26.816L30.008 12.312L33.24 2.48H34.976L31.232 14H28.824ZM40.678 14.24C39.526 14.24 38.5447 13.9893 37.734 13.488C36.9233 12.9813 36.302 12.2773 35.87 11.376C35.4433 10.4747 35.23 9.42933 35.23 8.24C35.23 7.05067 35.4433 6.00533 35.87 5.104C36.302 4.20267 36.9233 3.50133 37.734 3C38.5447 2.49333 39.526 2.24 40.678 2.24C41.8247 2.24 42.8033 2.49333 43.614 3C44.43 3.50133 45.0513 4.20267 45.478 5.104C45.9047 6.00533 46.118 7.05067 46.118 8.24C46.118 9.42933 45.9047 10.4747 45.478 11.376C45.0513 12.2773 44.43 12.9813 43.614 13.488C42.8033 13.9893 41.8247 14.24 40.678 14.24ZM40.678 12.648C41.494 12.6587 42.1713 12.48 42.71 12.112C43.254 11.7387 43.662 11.2213 43.934 10.56C44.206 9.89333 44.342 9.12 44.342 8.24C44.342 7.36 44.206 6.592 43.934 5.936C43.662 5.27467 43.254 4.76 42.71 4.392C42.1713 4.024 41.494 3.83733 40.678 3.832C39.862 3.82133 39.182 4 38.638 4.368C38.0993 4.736 37.694 5.25333 37.422 5.92C37.15 6.58667 37.0113 7.36 37.006 8.24C37.0007 9.12 37.134 9.89067 37.406 10.552C37.678 11.208 38.086 11.72 38.63 12.088C39.1793 12.456 39.862 12.6427 40.678 12.648ZM47.8738 14V2.48H49.5458V12.424H54.7618V14H47.8738ZM57.3983 14V4.056H53.5663V2.48H62.9023V4.056H59.0703V14H57.3983ZM63.07 14L66.814 2.48H69.222L72.966 14H71.23L67.782 3.488H68.214L64.806 14H63.07ZM65.014 11.4V9.832H71.03V11.4H65.014ZM74.4013 14V2.48H79.0573C79.1693 2.48 79.3079 2.48533 79.4733 2.496C79.6386 2.50133 79.7959 2.51733 79.9453 2.544C80.5853 2.64533 81.1186 2.864 81.5452 3.2C81.9773 3.536 82.2999 3.96 82.5133 4.472C82.7266 4.984 82.8333 5.54933 82.8333 6.168C82.8333 7.08533 82.5986 7.87733 82.1293 8.544C81.6599 9.20533 80.9559 9.61867 80.0173 9.784L79.3373 9.864H76.0733V14H74.4013ZM81.1373 14L78.8653 9.312L80.5533 8.88L83.0493 14H81.1373ZM76.0733 8.28H78.9933C79.0999 8.28 79.2173 8.27467 79.3453 8.264C79.4786 8.25333 79.6039 8.23467 79.7213 8.208C80.0626 8.128 80.3373 7.98133 80.5453 7.768C80.7533 7.54933 80.9026 7.29867 80.9933 7.016C81.0839 6.73333 81.1293 6.45067 81.1293 6.168C81.1293 5.88533 81.0839 5.60533 80.9933 5.328C80.9026 5.04533 80.7533 4.79733 80.5453 4.584C80.3373 4.36533 80.0626 4.216 79.7213 4.136C79.6039 4.104 79.4786 4.08267 79.3453 4.072C79.2173 4.06133 79.0999 4.056 78.9933 4.056H76.0733V8.28Z"
+                            fill="#121212"></path>
+                        <path
+                            d="M0.739693 5.79658L0.369852 6.17944L0 5.79658L0.369852 5.41377L0.739693 5.79658ZM18 14.4586C18 14.7576 17.7658 15 17.477 15C17.1881 15 16.9539 14.7576 16.9539 14.4586H18ZM5.60025 11.5932L0.369852 6.17944L1.10953 5.41377L6.33993 10.8275L5.60025 11.5932ZM0.369852 5.41377L5.60025 0L6.33993 0.765616L1.10953 6.17944L0.369852 5.41377ZM0.739693 5.25521H11.2005V6.33796H0.739693V5.25521ZM18 12.2931V14.4586H16.9539V12.2931H18ZM11.2005 5.25521C14.9557 5.25521 18 8.40613 18 12.2931H16.9539C16.9539 9.00414 14.3781 6.33796 11.2005 6.33796V5.25521Z"
+                            fill="#121212"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
     </div>
 
+    <section id="footer" class="section-padding">
+        <div class="container">
+            <div class="container-footer row justify-content-end">
+                <div class="col-lg-4 mt-3"><img src="{{ url_for('static', filename='images/logo-branca-morada-do-sol.png') }}"
+                        alt="Logo da Imobili&#xE1;ria" style="width: 200px;" />
+
+                    <ul class="mt-4 list-footer">
+                        <li><a href="#">
+                            <h4 class="text-white">SOBRE NÓS</h4>
+                        </a></li>
+                        <li><a href="#">
+                            <h4 class="text-white mt-4">ENTRE EM CONTATO</h4>
+                        </a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-8 row m-0 mt-4">
+                    <div class="col-lg-4 p-0">
+                        <div class="footer-widget footer-link">
+                            <h4 class="text-white">NOSSOS IMÓVEIS</h4>
+                            <ul class="list-footer">
+                                <li><a
+                                        href="{{ url_for('listar_imoveis_por_status', status_filtro='prontos') }}"
+                                        onclick="fecharMenu()">PRONTOS PARA MORAR</a></li>
+                                <li><a
+                                        href="{{ url_for('listar_imoveis_por_status', status_filtro='lancamentos') }}"
+                                        onclick="fecharMenu()">LANÇAMENTOS</a></li>
+                                <li><a href="{{ url_for('listar_imoveis_por_status', status_filtro='alugar') }}"
+                                        onclick="fecharMenu()">Aluguel</a></li>
+                                <li><a href="{{ url_for('listar_imoveis_por_status', status_filtro='portfolio') }}"
+                                        onclick="fecharMenu()">Portfólio (Todos)</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 mt-4" >
+                    <div class="footer-widget footer-link">
+                        <h4 class="text-white">INSTITUCIONAL</h4>
+                        <ul class="list-footer">
+                            <li><a href="#">POLÍTICA DE
+                                    PRIVACIDADE</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-8 mt-4">
+                    <div class="footer-widget footer-link">
+                        <h4 class="text-white">AGÊNCIAS</h4>
+                        <ul class="list-footer agenciasFooter">
+                            <li><a href="" >ELITE GO</a></li>
+                            <li><a href="" >ELITE MT</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3 justify-content-center">
+                <div class="col-lg-4 col-md-5 mt-5 d-flex" style="justify-content:space-evenly"><a
+                        href="https://www.facebook.com/" target="_blank"><svg width="35"
+                            height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path
+                                d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+                                fill="white"></path>
+                            <path
+                                d="M12.2712 18.652H14.4635V27.6774C14.4635 27.8556 14.6079 28 14.7861 28H18.5032C18.6814 28 18.8258 27.8556 18.8258 27.6774V18.6945H21.3461C21.5099 18.6945 21.6478 18.5715 21.6665 18.4088L22.0493 15.0861C22.0598 14.9946 22.0308 14.9031 21.9697 14.8345C21.9085 14.7659 21.8208 14.7266 21.7289 14.7266H18.8259V12.6437C18.8259 12.0159 19.164 11.6975 19.8308 11.6975C19.9259 11.6975 21.7289 11.6975 21.7289 11.6975C21.9071 11.6975 22.0515 11.553 22.0515 11.3749V8.32497C22.0515 8.14677 21.9071 8.00239 21.7289 8.00239H19.1131C19.0946 8.00148 19.0537 8 18.9933 8C18.5394 8 16.9618 8.0891 15.7156 9.23555C14.3348 10.506 14.5268 12.0272 14.5726 12.2909V14.7265H12.2712C12.093 14.7265 11.9486 14.8709 11.9486 15.0491V18.3294C11.9486 18.5075 12.093 18.652 12.2712 18.652Z"
+                                fill="black"></path>
+                        </svg></a><a href="https://www.instagram.com" target="_blank"
+                        ><svg width="35" height="35" viewBox="0 0 35 35" fill="none"
+                            xmlns="http://www.w3.org/2000/svg" >
+                            <path
+                                d="M35 17.5C35 27.165 27.165 35 17.5 35C7.83502 35 0 27.165 0 17.5C0 7.83502 7.83502 0 17.5 0C27.165 0 35 7.83502 35 17.5Z"
+                                fill="white"></path>
+                            <path
+                                d="M18 8.98202C20.9371 8.98202 21.285 8.9932 22.4449 9.04612C23.5174 9.09507 24.0998 9.27427 24.4875 9.42487C25.0009 9.62441 25.3674 9.86282 25.7523 10.2477C26.1372 10.6326 26.3756 10.9991 26.5751 11.5125C26.7257 11.9002 26.9049 12.4826 26.9539 13.5551C27.0068 14.715 27.018 15.0629 27.018 18C27.018 20.9372 27.0068 21.285 26.9539 22.4449C26.9049 23.5174 26.7257 24.0999 26.5751 24.4875C26.3756 25.0009 26.1372 25.3674 25.7523 25.7523C25.3674 26.1372 25.0009 26.3756 24.4875 26.5751C24.0998 26.7258 23.5174 26.905 22.4449 26.9539C21.2852 27.0068 20.9373 27.018 18 27.018C15.0627 27.018 14.7148 27.0068 13.5551 26.9539C12.4826 26.905 11.9001 26.7258 11.5125 26.5751C10.9991 26.3756 10.6326 26.1372 10.2477 25.7523C9.86278 25.3674 9.62437 25.0009 9.42487 24.4875C9.27422 24.0999 9.09503 23.5174 9.04608 22.445C8.99316 21.285 8.98198 20.9372 8.98198 18C8.98198 15.0629 8.99316 14.715 9.04608 13.5551C9.09503 12.4826 9.27422 11.9002 9.42487 11.5125C9.62437 10.9991 9.86278 10.6326 10.2477 10.2477C10.6326 9.86282 10.9991 9.62441 11.5125 9.42487C11.9001 9.27427 12.4826 9.09507 13.555 9.04612C14.715 8.9932 15.0628 8.98202 18 8.98202ZM18 7C15.0125 7 14.638 7.01266 13.4647 7.0662C12.2938 7.11964 11.4943 7.30556 10.7945 7.57751C10.0712 7.85862 9.45775 8.23475 8.84623 8.84627C8.2347 9.45779 7.85858 10.0712 7.57746 10.7946C7.30552 11.4943 7.1196 12.2939 7.06615 13.4648C7.01262 14.638 7 15.0126 7 18C7 20.9875 7.01262 21.3621 7.06615 22.5353C7.1196 23.7062 7.30552 24.5057 7.57746 25.2055C7.85858 25.9288 8.2347 26.5423 8.84623 27.1538C9.45775 27.7653 10.0712 28.1414 10.7945 28.4225C11.4943 28.6945 12.2938 28.8804 13.4647 28.9338C14.638 28.9874 15.0125 29 18 29C20.9874 29 21.362 28.9874 22.5352 28.9338C23.7061 28.8804 24.5057 28.6945 25.2054 28.4225C25.9288 28.1414 26.5422 27.7653 27.1537 27.1538C27.7653 26.5423 28.1414 25.9288 28.4225 25.2055C28.6944 24.5057 28.8804 23.7062 28.9338 22.5353C28.9873 21.3621 29 20.9875 29 18C29 15.0126 28.9873 14.638 28.9338 13.4648C28.8804 12.2939 28.6944 11.4943 28.4225 10.7946C28.1414 10.0712 27.7653 9.45779 27.1537 8.84627C26.5422 8.23475 25.9288 7.85862 25.2054 7.57751C24.5057 7.30556 23.7061 7.11964 22.5352 7.0662C21.362 7.01266 20.9874 7 18 7ZM18 12.3514C14.8803 12.3514 12.3513 14.8804 12.3513 18C12.3513 21.1197 14.8803 23.6487 18 23.6487C21.1196 23.6487 23.6486 21.1197 23.6486 18C23.6486 14.8804 21.1196 12.3514 18 12.3514ZM18 21.6667C15.9749 21.6667 14.3333 20.0251 14.3333 18C14.3333 15.975 15.9749 14.3333 18 14.3333C20.025 14.3333 21.6667 15.975 21.6667 18C21.6667 20.0251 20.025 21.6667 18 21.6667ZM25.1918 12.1282C25.1918 12.8572 24.6008 13.4482 23.8718 13.4482C23.1428 13.4482 22.5518 12.8572 22.5518 12.1282C22.5518 11.3992 23.1428 10.8082 23.8718 10.8082C24.6008 10.8082 25.1918 11.3992 25.1918 12.1282Z"
+                                fill="black"></path>
+                        </svg></a></div>
+                <div class="col-lg-12 text-center">
+                    <div class="footer-copy">
+                        &copy;2025 URBS. Todos os direitos reservados<br> Desenvolvido
+                        pela Virtus Doctor
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script>
-        // Pega os elementos do DOM (Document Object Model)
-        var modal = document.getElementById("modalAcesso");
-        var btn = document.getElementById("btnAcessar");
-        var span = document.getElementsByClassName("close")[0];
+        try {
+            function toggleNavigation() {
+                var navToggle = document.getElementById("nav-toggle");
+                var navMobile = document.getElementById("bgc-navmobile");
 
-        // Quando o usuário clica no botão, abre o modal 
-        btn.onclick = function() {
-            modal.style.display = "block";
-        }
 
-        // Quando o usuário clica no (x), fecha o modal
-        span.onclick = function() {
-            modal.style.display = "none";
-        }
-
-        // Quando o usuário clica fora do modal, fecha-o
-        window.onclick = function(event) {
-            if (event.target == modal) {
-                modal.style.display = "none";
+                if (navToggle.checked) {
+                    navMobile.style.display = "flex";
+                } else {
+                    navMobile.style.display = "none";
+                }
             }
+        } catch (e) {
+
+        }
+        try {
+            function fecharMenu() {
+                var checkbox = document.getElementById("nav-toggle");
+                var navMobile = document.getElementById("bgc-navmobile");
+                navMobile.style.display = "none";
+                checkbox.checked = false;
+            }
+        } catch (e) {
+
+        }
+        try {
+            function initializeSelect2(selector) {
+
+
+                $(selector).each(function () {
+                    let $select = $(this);
+
+
+                    // Define o elemento pai apropriado (modal ou #ababranca)
+                    let parentModal = $select.closest(".modal");
+                    let parentAbaBranca = $select.closest("#ababranca");
+                    let dropdownParent = null;
+
+                    if (parentModal.length > 0) {
+                        dropdownParent = parentModal;
+                    } else if (parentAbaBranca.length > 0) {
+                        dropdownParent = parentAbaBranca;
+                    }
+
+                    // Inicializa o select2 com o dropdown parent
+                    $select.select2({
+                        dropdownParent: dropdownParent
+                    });
+
+                    // Evento ao abrir o select
+                    $select.on("select2:open", function () {
+                        setTimeout(function () {
+                            let searchField = $(".select2-container--open .select2-search__field");
+                            if (searchField.length > 0) {
+                                searchField.focus(); // Garante que o campo de busca terá foco
+                            }
+                        }, 100);
+                    });
+                });
+            }
+
+
+
+            function resetCitySelects() {
+                $('#ddlCidade').val("Cidade").trigger('change.select2');
+                $('#cidadeInput').val('Cidade').trigger('change.select2');
+            }
+
+        } catch (e) {
+
         }
     </script>
 </body>
